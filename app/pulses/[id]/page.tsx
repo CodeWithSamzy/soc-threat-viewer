@@ -56,26 +56,29 @@ export default async function PulseDetailPage({
     <main className="min-h-screen bg-zinc-950 text-white">
       {/* Header */}
       <div className="border-b border-zinc-800 bg-zinc-900/50 backdrop-blur sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center gap-3">
           <Link
             href="/"
-            className="text-zinc-400 hover:text-white transition-colors text-sm"
+            className="text-zinc-400 hover:text-white transition-colors text-sm shrink-0"
           >
-            ← Back to Feed
+            ← Back
           </Link>
           <span className="text-zinc-700">|</span>
           <span className="text-sm text-zinc-300 truncate">{pulse.name}</span>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
         {/* Pulse Header Card */}
         <Card className="bg-zinc-900 border-zinc-800">
-          <CardContent className="p-6 space-y-4">
-            <div className="flex items-start justify-between gap-4 flex-wrap">
-              <div>
-                <h1 className="text-xl font-bold text-white">{pulse.name}</h1>
-                <p className="text-zinc-400 text-sm mt-1">
+          <CardContent className="p-4 sm:p-6 space-y-4">
+            {/* Title & TLP */}
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+              <div className="space-y-1">
+                <h1 className="text-lg sm:text-xl font-bold text-white leading-snug">
+                  {pulse.name}
+                </h1>
+                <p className="text-zinc-400 text-sm">
                   by {pulse.author_name} ·{' '}
                   {new Date(pulse.created).toLocaleDateString()}
                 </p>
@@ -83,12 +86,13 @@ export default async function PulseDetailPage({
               <Badge
                 className={`${
                   tlpColors[pulse.tlp?.toLowerCase()] || 'bg-zinc-700 text-white'
-                } uppercase text-xs`}
+                } uppercase text-xs self-start shrink-0`}
               >
                 TLP: {pulse.tlp || 'N/A'}
               </Badge>
             </div>
 
+            {/* Description */}
             {pulse.description && (
               <p className="text-zinc-300 text-sm leading-relaxed">
                 {pulse.description}
@@ -110,23 +114,23 @@ export default async function PulseDetailPage({
               </div>
             )}
 
-            {/* Meta */}
+            {/* Meta Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
               <div>
                 <p className="text-zinc-500 text-xs">Total IOCs</p>
-                <p className="text-green-400 font-mono font-bold text-lg">
+                <p className="text-green-400 font-mono font-bold text-xl">
                   {pulse.indicators?.length ?? 0}
                 </p>
               </div>
               <div>
                 <p className="text-zinc-500 text-xs">Countries Targeted</p>
-                <p className="text-white font-bold text-lg">
+                <p className="text-white font-bold text-xl">
                   {pulse.targeted_countries?.length ?? 0}
                 </p>
               </div>
               <div>
                 <p className="text-zinc-500 text-xs">References</p>
-                <p className="text-white font-bold text-lg">
+                <p className="text-white font-bold text-xl">
                   {pulse.references?.length ?? 0}
                 </p>
               </div>
@@ -140,15 +144,52 @@ export default async function PulseDetailPage({
           </CardContent>
         </Card>
 
-        {/* IOC Table */}
+        {/* IOC Section */}
         <Card className="bg-zinc-900 border-zinc-800">
-          <CardHeader className="pb-2">
+          <CardHeader className="pb-2 px-4 sm:px-6">
             <CardTitle className="text-white text-base">
               Indicators of Compromise
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="rounded-lg border border-zinc-800 overflow-hidden">
+          <CardContent className="px-4 sm:px-6">
+
+            {/* Mobile IOC Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:hidden">
+              {pulse.indicators?.length === 0 ? (
+                <p className="text-zinc-500 text-sm text-center py-10 col-span-full">
+                  No indicators found
+                </p>
+              ) : (
+                pulse.indicators?.map((ioc, index) => (
+                  <div
+                    key={index}
+                    className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-3 space-y-2"
+                  >
+                    <p className="font-mono text-xs text-white break-all">
+                      {ioc.indicator}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span
+                        className={`text-xs font-medium ${
+                          iocTypeColors[ioc.type] || 'text-zinc-400'
+                        }`}
+                      >
+                        {ioc.type}
+                      </span>
+                      <span className="text-zinc-500 text-xs">
+                        {new Date(ioc.created).toLocaleDateString()}
+                      </span>
+                    </div>
+                    {ioc.description && (
+                      <p className="text-zinc-400 text-xs">{ioc.description}</p>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Desktop IOC Table */}
+            <div className="hidden lg:block rounded-lg border border-zinc-800 overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow className="border-zinc-800 hover:bg-transparent">
@@ -204,14 +245,13 @@ export default async function PulseDetailPage({
         {/* References */}
         {pulse.references?.length > 0 && (
           <Card className="bg-zinc-900 border-zinc-800">
-            <CardHeader className="pb-2">
+            <CardHeader className="pb-2 px-4 sm:px-6">
               <CardTitle className="text-white text-base">References</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="px-4 sm:px-6">
               <ul className="space-y-2">
                 {pulse.references.map((ref, index) => (
                   <li key={index}>
-                    
                     <a
                       href={ref}
                       target="_blank"

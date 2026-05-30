@@ -15,6 +15,7 @@ async function getPulses(): Promise<PulsesResponse> {
   if (!res.ok) throw new Error('Failed to fetch pulses')
   return res.json()
 }
+
 export default async function Home() {
   const data = await getPulses()
 
@@ -34,12 +35,16 @@ export default async function Home() {
     <main className="min-h-screen bg-zinc-950 text-white">
       {/* Header */}
       <div className="border-b border-zinc-800 bg-zinc-900/50 backdrop-blur sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-2xl">🛡️</span>
+            <span className="text-xl sm:text-2xl">🛡️</span>
             <div>
-              <h1 className="text-lg font-bold text-white">SOC Threat Feed</h1>
-              <p className="text-xs text-zinc-500">Powered by AlienVault OTX</p>
+              <h1 className="text-base sm:text-lg font-bold text-white">
+                SOC Threat Feed
+              </h1>
+              <p className="text-xs text-zinc-500 hidden sm:block">
+                Powered by AlienVault OTX
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -49,9 +54,9 @@ export default async function Home() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
         {/* Stat Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <StatCard
             title="Total Pulses"
             value={data.results.length}
@@ -81,8 +86,10 @@ export default async function Home() {
         {/* Pulse Table */}
         <div>
           <div className="mb-4">
-            <h2 className="text-lg font-semibold text-white">Threat Pulses</h2>
-            <p className="text-sm text-zinc-500">
+            <h2 className="text-base sm:text-lg font-semibold text-white">
+              Threat Pulses
+            </h2>
+            <p className="text-xs sm:text-sm text-zinc-500">
               Click any row to view full IOC breakdown
             </p>
           </div>
