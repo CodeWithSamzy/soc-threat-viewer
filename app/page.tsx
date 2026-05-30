@@ -4,13 +4,17 @@ import PulseTable from '@/app/components/PulseTable'
 
 async function getPulses(): Promise<PulsesResponse> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/pulses`,
-    { cache: 'no-store' }
+    'https://otx.alienvault.com/api/v1/pulses/subscribed?page=1&limit=20',
+    {
+      headers: {
+        'X-OTX-API-KEY': process.env.OTX_API_KEY!,
+      },
+      next: { revalidate: 300 },
+    }
   )
   if (!res.ok) throw new Error('Failed to fetch pulses')
   return res.json()
 }
-
 export default async function Home() {
   const data = await getPulses()
 
